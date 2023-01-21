@@ -54,19 +54,22 @@ app.get('/users/:userId', (req, res) => {
 });
 
 app.put('/users/:userId', (req, res) => {
-  const id = parseInt(req.params.userId);
-  
-  users[id - 1].name = req.body.name;
-  users[id - 1].occupation = req.body.occupation;
-  users[id - 1].avatar = req.body.avatar;
-
-  res.json(users);
+  const findUser = users.find( user => user._id = parseInt(req.params.userId));
+  // let user = findUser[0]
+  if(findUser) {
+    const update = {
+      ...req.body
+    }
+    res.json(update)
+  } else {
+    res.status(400).json( {msg : `No member with the id of ${req.params.userId} is found!`})
+  }
 });
 
 app.delete('/users/:userId', (req, res) => {
   let findUser = (users.find( user => user._id === parseInt(req.params.userId)));
-  let user = findUser[0];
-  if (user) {
+  // let user = findUser[0];
+  if (findUser) {
     users.isActive = 'false';
     res.send('deleted')
   } else {
